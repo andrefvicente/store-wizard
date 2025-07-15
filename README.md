@@ -19,7 +19,7 @@ docker-compose up -d
 ### Verify Installation
 ```bash
 curl http://localhost:9020/healthz  # API Gateway
-open http://localhost:9026          # UI
+open http://localhost:9020/healthz          # UI
 ```
 
 ### Service Ports
@@ -63,66 +63,7 @@ open http://localhost:9026          # UI
 - **AI**: OpenAI GPT-4 and Meta Llama-3
 - **Infrastructure**: Docker, Kubernetes-ready, Prometheus + Grafana
 
-## ⚖️ Trade-offs
 
-### Architecture Decisions
-
-**Microservices vs Monolith**
-- ✅ **Pros**: Independent scaling, technology flexibility, team autonomy
-- ❌ **Cons**: Increased complexity, network latency, distributed debugging
-
-**FastAPI vs Django/Flask**
-- ✅ **Pros**: Async performance, automatic OpenAPI docs, type safety
-- ❌ **Cons**: Smaller ecosystem, steeper learning curve
-
-**PostgreSQL + Redis vs Single Database**
-- ✅ **Pros**: Optimized for different workloads, caching performance
-- ❌ **Cons**: Data consistency challenges, operational complexity
-
-### AI Integration Trade-offs
-
-**GPT-4 vs Llama-3**
-- ✅ **GPT-4**: Better reasoning, larger context, proven reliability
-- ❌ **GPT-4**: Higher cost, API dependency, rate limits
-- ✅ **Llama-3**: Lower cost, privacy, offline capability
-- ❌ **Llama-3**: Lower performance, resource intensive
-
-**Real-time vs Batch Processing**
-- ✅ **Real-time**: Immediate feedback, better UX
-- ❌ **Real-time**: Higher costs, complexity
-- ✅ **Batch**: Cost-effective, simpler architecture
-- ❌ **Batch**: Delayed feedback, poor UX
-
-### Security vs Usability
-- **JWT tokens**: Simple but stateless, requires careful expiration handling
-- **API rate limiting**: Protects against abuse but may impact legitimate users
-- **CORS configuration**: Security necessity but adds deployment complexity
-
-## 🔮 Future Work
-
-### Phase 1: Core Enhancements (Q2 2024)
-- **Multi-language Support**: Internationalization for global markets
-- **Advanced Analytics**: Real-time insights and performance optimization
-- **A/B Testing Framework**: Data-driven optimization of wizard flow
-- **Enhanced AI Models**: Fine-tuned models for specific industries
-
-### Phase 2: Advanced Features (Q3 2024)
-- **Mobile App**: Native iOS/Android applications
-- **Voice Interface**: Voice-guided setup for accessibility
-- **Predictive Analytics**: ML-powered business recommendations
-- **Enterprise Features**: Multi-tenant support, SSO integration
-
-### Phase 3: Platform Evolution (Q4 2024)
-- **Marketplace Integration**: Direct connection to major e-commerce platforms
-- **Advanced Customization**: AI-powered theme generation
-- **Performance Optimization**: Edge computing, CDN optimization
-- **API Ecosystem**: Third-party developer platform
-
-### Technical Debt & Improvements
-- **Database Optimization**: Query optimization, indexing strategies
-- **Caching Strategy**: Multi-level caching (Redis + CDN)
-- **Monitoring Enhancement**: Custom dashboards, alerting rules
-- **Testing Coverage**: E2E tests, performance testing
 
 ## 🧪 Development
 
