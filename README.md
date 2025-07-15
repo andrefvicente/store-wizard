@@ -113,18 +113,6 @@ JWT_SECRET=your_jwt_secret
 - `ENABLE_THEME_AI`: AI-powered theme recommendations
 - `ENABLE_INTEGRATION_AUTO_SETUP`: Automatic integration setup
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Code Standards
-- **Python**: Black formatting, isort imports, mypy type checking
-- **TypeScript**: ESLint + Prettier, strict TypeScript config
-- **Testing**: >80% code coverage required
 
 ## 📜 License
 
