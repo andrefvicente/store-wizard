@@ -1,0 +1,250 @@
+version: '3.8'
+
+services:
+  # Store Wizard API Service
+  store-wizard-api-service:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9020"
+    environment:
+      - LLM_SERVICE_URL=http://store-wizard-llm-service:9021
+      - CONTENT_GENERATOR_URL=http://store-wizard-content-service:9022
+      - THEME_SERVICE_URL=http://store-wizard-theme-service:9023
+      - INTEGRATION_SERVICE_URL=http://store-wizard-integration-service:9024
+      - POSTGRES_URL=postgresql://wizard:wizardpass@store-wizard-postgres:5432/storewizard
+      - REDIS_URL=redis://store-wizard-redis:6379
+      - JWT_SECRET=${JWT_SECRET:-wizard-dev-secret}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - SHOPIFY_API_KEY=${SHOPIFY_API_KEY}
+      - WOOCOMMERCE_API_KEY=${WOOCOMMERCE_API_KEY}
+    depends_on:
+      - store-wizard-postgres
+      - store-wizard-redis
+      - store-wizard-llm-service
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9020/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - ./data/models:/app/models:ro
+      - ./data/templates:/app/templates:ro
+
+  # LLM Service for AI assistance (GPT-4 + Llama-3)
+  store-wizard-llm-service:
+    build:
+      context: ./services/llm
+      dockerfile: Dockerfile
+    ports:
+      - "9021:9021"
+    environment:
+      - MODEL_PATH=/app/models
+      - LLAMA_MODEL=Meta-Llama-3-8B-Instruct
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - MAX_TOKENS=4096
+      - TEMPERATURE=0.7
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9021/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 120s
+    volumes:
+      - ./data/models:/app/models
+      - llm-cache:/app/.cache
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+        reservations:
+          memory: 8G
+
+  # Content Generation Service (Marketing copy, product descriptions)
+  store-wizard-content-service:
+    build:
+      context: ./services/content
+      dockerfile: Dockerfile
+    ports:
+      - "9022:9022"
+    environment:
+      - LLM_SERVICE_URL=http://store-wizard-llm-service:9021
+      - REDIS_URL=redis://store-wizard-redis:6379
+      - BRAND_VOICE_MODELS=/app/models/brand-voice
+      - SEO_OPTIMIZATION=true
+    depends_on:
+      - store-wizard-llm-service
+      - store-wizard-redis
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9022/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./data/models:/app/models:ro
+      - content-cache:/app/.cache
+
+  # Theme Recommendation & Customization Service
+  store-wizard-theme-service:
+    build:
+      context: ./services/theme
+      dockerfile: Dockerfile
+    ports:
+      - "9023:9023"
+    environment:
+      - DESIGN_AI_MODEL=/app/models/design-ai
+      - THEME_TEMPLATES_PATH=/app/templates
+      - COLOR_PALETTE_API=${COLOR_PALETTE_API}
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9023/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./data/models:/app/models:ro
+      - ./data/templates:/app/templates:ro
+      - theme-cache:/app/.cache
+
+  # Integration Service (Shopify, WooCommerce, Stripe, etc.)
+  store-wizard-integration-service:
+    build:
+      context: ./services/integration
+      dockerfile: Dockerfile
+    ports:
+      - "9024:9024"
+    environment:
+      - SHOPIFY_API_URL=https://partners.shopify.com/api
+      - WOOCOMMERCE_API_URL=${WOOCOMMERCE_API_URL}
+      - STRIPE_API_URL=https://api.stripe.com/v1
+      - PAYPAL_API_URL=${PAYPAL_API_URL}
+      - MAILCHIMP_API_URL=${MAILCHIMP_API_URL}
+      - GOOGLE_ANALYTICS_API=${GOOGLE_ANALYTICS_API}
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9024/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Analytics & Recommendations Service
+  store-wizard-analytics-service:
+    build:
+      context: ./services/analytics
+      dockerfile: Dockerfile
+    ports:
+      - "9025:9025"
+    environment:
+      - POSTGRES_URL=postgresql://wizard:wizardpass@store-wizard-postgres:5432/storewizard
+      - REDIS_URL=redis://store-wizard-redis:6379
+      - ML_MODEL_PATH=/app/models/analytics
+    depends_on:
+      - store-wizard-postgres
+      - store-wizard-redis
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9025/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./data/models:/app/models:ro
+
+  # PostgreSQL for wizard data and configurations
+  store-wizard-postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=storewizard
+      - POSTGRES_USER=wizard
+      - POSTGRES_PASSWORD=wizardpass
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wizard -d storewizard"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./data/migrations:/docker-entrypoint-initdb.d
+
+  # Redis for session management and caching
+  store-wizard-redis:
+    image: redis:7-alpine
+    ports:
+      - "6383:6379"
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - redis-data:/data
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+
+  # UI Service for the Store Launch Wizard
+  store-wizard-ui-service:
+    build:
+      context: ./services/ui
+      dockerfile: Dockerfile
+    ports:
+      - "9026:9026"
+    environment:
+      - API_SERVICE_URL=http://store-wizard-api-service:9020
+      - REACT_APP_API_URL=http://localhost:9000
+      - REACT_APP_WIZARD_TITLE=NEXT BASKET Store Launch Wizard
+    depends_on:
+      - store-wizard-api-service
+    networks:
+      - wizard-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9026/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./services/ui:/app
+      - ui-cache:/app/.cache
+
+networks:
+  wizard-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  llm-cache:
+    driver: local
+  content-cache:
+    driver: local
+  theme-cache:
+    driver: local
+  ui-cache:
+    driver: local 
