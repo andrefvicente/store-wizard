@@ -228,7 +228,7 @@ services:
       timeout: 10s
       retries: 3
     volumes:
-      - ./services/ui:/app
+      # - ./services/ui:/app  # Commented out for production build
       - ui-cache:/app/.cache
 
 networks:
