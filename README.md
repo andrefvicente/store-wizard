@@ -16,12 +16,6 @@ cp .env.example .env  # Edit with your API keys
 docker-compose up -d
 ```
 
-### Verify Installation
-```bash
-curl http://localhost:9020/healthz  # API Gateway
-open http://localhost:9020/healthz          # UI
-```
-
 ### Service Ports
 | Service | Port | Purpose |
 |---------|------|---------|
