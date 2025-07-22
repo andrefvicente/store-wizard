@@ -24,7 +24,7 @@ The Store Launch Wizard is an AI-powered microservice that guides users through 
 - **Mobile Responsiveness**: Ensure optimal mobile experience
 
 ### 4. Platform Integration
-- **E-commerce Platforms**: Shopify, WooCommerce, Magento, BigCommerce
+- **E-commerce Platforms**: Next Basket (Self and Pro plans)
 - **Payment Gateways**: Stripe, PayPal, Square, Klarna
 - **Shipping Solutions**: ShipStation, Easyship, local carriers
 - **Marketing Tools**: Mailchimp, Google Analytics, Facebook Pixel

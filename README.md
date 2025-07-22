@@ -1,6 +1,6 @@
 # NEXT BASKET Store Launch Wizard
 
-An AI-powered microservice that guides users through complete e-commerce store setup, from configuration to launch readiness.
+An AI-powered microservice that guides users through complete e-commerce store setup, from configuration to launch readiness. Supports only Next Basket (Self and Pro plans).
 
 ## 🚀 Quick Setup
 

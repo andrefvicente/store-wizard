@@ -80,7 +80,7 @@ The Store Launch Wizard is a microservices-based system that provides AI-assiste
 ### 5. Integration Service (Port: 9024)
 **Technology**: Python, Multiple API SDKs
 **Responsibilities**:
-- E-commerce platform integration (Shopify, WooCommerce)
+- E-commerce platform integration (Next Basket: Self and Pro plans)
 - Payment gateway setup (Stripe, PayPal)
 - Shipping provider configuration
 - Marketing tool integration (Mailchimp, GA4)

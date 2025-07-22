@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { CheckCircle, Rocket, AlertCircle, Settings, Play, ExternalLink, Bell, Loader2, Globe } from 'lucide-react'
+import React, { useState } from 'react'
+import { CheckCircle, Rocket, AlertCircle, Settings, Play, ExternalLink, Bell, Loader2 } from 'lucide-react'
 import StoreSuccessPage from '../StoreSuccessPage'
 
 interface LaunchReadinessProps {
@@ -17,14 +17,7 @@ interface DeploymentStatus {
     warnings?: string[]
 }
 
-interface Platform {
-    id: string
-    name: string
-    description: string
-    setup_time: string
-    monthly_cost: string
-    features: string[]
-}
+
 
 const LaunchReadiness: React.FC<LaunchReadinessProps> = ({ data, setData }) => {
     const [launchSettings, setLaunchSettings] = useState(data.launchSettings || {
@@ -42,8 +35,6 @@ const LaunchReadiness: React.FC<LaunchReadinessProps> = ({ data, setData }) => {
 
     const [isLaunching, setIsLaunching] = useState(false)
     const [validationResult, setValidationResult] = useState<any>(null)
-    const [platforms, setPlatforms] = useState<Platform[]>([])
-    const [loadingPlatforms, setLoadingPlatforms] = useState(false)
     const [showSuccessPage, setShowSuccessPage] = useState(false)
 
     const checklistItems = [
@@ -58,51 +49,7 @@ const LaunchReadiness: React.FC<LaunchReadinessProps> = ({ data, setData }) => {
     const completedCount = checklistItems.filter(item => item.completed).length
     const totalCount = checklistItems.length
 
-    useEffect(() => {
-        loadPlatforms()
-    }, [])
 
-    const loadPlatforms = async () => {
-        setLoadingPlatforms(true)
-        try {
-            const response = await fetch('/api/v1/integrations/platforms')
-            if (response.ok) {
-                const data = await response.json()
-                setPlatforms(data.platforms)
-            }
-        } catch (error) {
-            console.error('Failed to load platforms:', error)
-            // Fallback to default platforms
-            setPlatforms([
-                {
-                    id: 'nextbasket',
-                    name: 'Next Basket',
-                    description: 'AI-powered e-commerce platform',
-                    setup_time: '3-5 minutes',
-                    monthly_cost: '$19-99',
-                    features: ['AI optimization', 'Smart pricing', 'Automated marketing']
-                },
-                {
-                    id: 'shopify',
-                    name: 'Shopify',
-                    description: 'Popular e-commerce platform with extensive features',
-                    setup_time: '5-10 minutes',
-                    monthly_cost: '$29-299',
-                    features: ['Payment processing', 'Inventory management', 'Marketing tools']
-                },
-                {
-                    id: 'woocommerce',
-                    name: 'WooCommerce',
-                    description: 'WordPress-based e-commerce solution',
-                    setup_time: '10-15 minutes',
-                    monthly_cost: '$0-50',
-                    features: ['Customizable', 'WordPress integration', 'Free to start']
-                }
-            ])
-        } finally {
-            setLoadingPlatforms(false)
-        }
-    }
 
     const handleSettingChange = (field: string, value: any) => {
         const newSettings = { ...launchSettings, [field]: value }
@@ -292,60 +239,7 @@ const LaunchReadiness: React.FC<LaunchReadinessProps> = ({ data, setData }) => {
             </div>
 
             {/* Platform Selection */}
-            <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                    <Globe className="w-6 h-6 text-blue-600" />
-                    <h3 className="text-lg font-semibold text-gray-900">Choose Your Platform</h3>
-                </div>
-                {loadingPlatforms ? (
-                    <div className="flex items-center justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
-                        <span className="ml-2 text-gray-600">Loading platforms...</span>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {platforms.map((platform) => (
-                            <div
-                                key={platform.id}
-                                className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${launchSettings.selectedPlatform === platform.id
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-200 hover:border-gray-300'
-                                    }`}
-                                onClick={() => handleSettingChange('selectedPlatform', platform.id)}
-                            >
-                                <div className="flex items-center space-x-3 mb-3">
-                                    <input
-                                        type="radio"
-                                        name="platform"
-                                        checked={launchSettings.selectedPlatform === platform.id}
-                                        onChange={() => { }}
-                                        className="w-4 h-4 text-blue-600"
-                                    />
-                                    <h4 className="font-medium text-gray-900">{platform.name}</h4>
-                                </div>
-                                <p className="text-sm text-gray-600 mb-3">{platform.description}</p>
-                                <div className="space-y-2 text-xs text-gray-500">
-                                    <div><span className="font-medium">Setup:</span> {platform.setup_time}</div>
-                                    <div><span className="font-medium">Cost:</span> {platform.monthly_cost}/month</div>
-                                </div>
-                                <div className="mt-3">
-                                    <p className="text-xs font-medium text-gray-700 mb-1">Features:</p>
-                                    <div className="flex flex-wrap gap-1">
-                                        {platform.features.slice(0, 2).map((feature, index) => (
-                                            <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                                                {feature}
-                                            </span>
-                                        ))}
-                                        {platform.features.length > 2 && (
-                                            <span className="text-xs text-gray-500">+{platform.features.length - 2} more</span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+            {/* The platform selection UI has been removed as per request */}
 
             {/* Checklist */}
             <div className="space-y-4">

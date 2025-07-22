@@ -29,50 +29,23 @@ async def get_available_platforms():
     return {
         "platforms": [
             {
-                "id": "shopify",
-                "name": "Shopify",
-                "description": "Leading e-commerce platform for online stores",
-                "features": ["Easy setup", "Mobile optimized", "Payment processing", "Inventory management"],
-                "pricing": {"starter": 29, "professional": 79, "enterprise": 299},
-                "rating": 4.8,
-                "setup_time": "1-2 hours"
-            },
-            {
-                "id": "woocommerce",
-                "name": "WooCommerce",
-                "description": "WordPress e-commerce plugin for customizable stores",
-                "features": ["WordPress integration", "Highly customizable", "SEO friendly", "Free core"],
-                "pricing": {"free": 0, "premium": 99, "enterprise": 299},
-                "rating": 4.6,
-                "setup_time": "2-4 hours"
-            },
-            {
-                "id": "bigcommerce",
-                "name": "BigCommerce",
-                "description": "Enterprise e-commerce platform with advanced features",
-                "features": ["Multi-channel selling", "Advanced analytics", "B2B capabilities", "API-first"],
-                "pricing": {"standard": 39, "plus": 105, "pro": 399},
-                "rating": 4.7,
-                "setup_time": "3-5 hours"
-            },
-            {
-                "id": "magento",
-                "name": "Magento",
-                "description": "Open-source e-commerce platform for large businesses",
-                "features": ["Scalable", "Multi-store", "Advanced features", "Enterprise ready"],
-                "pricing": {"community": 0, "commerce": 2000, "enterprise": 5000},
-                "rating": 4.5,
-                "setup_time": "1-2 weeks"
+                "id": "nextbasket",
+                "name": "Next Basket",
+                "description": "AI-powered e-commerce platform for modern businesses",
+                "features": ["AI optimization", "Smart pricing", "Automated marketing", "All-in-one commerce"],
+                "pricing": {"self": 19, "pro": 99},
+                "rating": 4.9,
+                "setup_time": "3-5 minutes"
             }
         ],
-        "total": 4
+        "total": 1
     }
 
 @app.get("/integrations/{platform_id}")
 async def get_platform_integrations(platform_id: str):
     """Get available integrations for a platform"""
     integrations = {
-        "shopify": [
+        "nextbasket": [
             {
                 "id": "stripe",
                 "name": "Stripe",
@@ -90,24 +63,6 @@ async def get_platform_integrations(platform_id: str):
                 "features": ["Email campaigns", "Automation", "Analytics"]
             },
             {
-                "id": "klaviyo",
-                "name": "Klaviyo",
-                "type": "marketing",
-                "description": "Customer data platform",
-                "setup_difficulty": "medium",
-                "features": ["Email marketing", "SMS", "Customer segmentation"]
-            }
-        ],
-        "woocommerce": [
-            {
-                "id": "paypal",
-                "name": "PayPal",
-                "type": "payment",
-                "description": "Digital payment platform",
-                "setup_difficulty": "easy",
-                "features": ["PayPal checkout", "Credit cards", "Buy now pay later"]
-            },
-            {
                 "id": "google_analytics",
                 "name": "Google Analytics",
                 "type": "analytics",
@@ -115,48 +70,10 @@ async def get_platform_integrations(platform_id: str):
                 "setup_difficulty": "medium",
                 "features": ["Traffic analysis", "Conversion tracking", "E-commerce tracking"]
             }
-        ],
-        "bigcommerce": [
-            {
-                "id": "square",
-                "name": "Square",
-                "type": "payment",
-                "description": "Payment and point-of-sale system",
-                "setup_difficulty": "easy",
-                "features": ["In-person payments", "Online payments", "Inventory management"]
-            },
-            {
-                "id": "hubspot",
-                "name": "HubSpot",
-                "type": "crm",
-                "description": "Customer relationship management",
-                "setup_difficulty": "medium",
-                "features": ["Lead management", "Email marketing", "Analytics"]
-            }
-        ],
-        "magento": [
-            {
-                "id": "authorize_net",
-                "name": "Authorize.net",
-                "type": "payment",
-                "description": "Payment gateway service",
-                "setup_difficulty": "hard",
-                "features": ["Credit card processing", "Fraud detection", "Recurring billing"]
-            },
-            {
-                "id": "salesforce",
-                "name": "Salesforce",
-                "type": "crm",
-                "description": "Customer relationship management",
-                "setup_difficulty": "hard",
-                "features": ["Lead management", "Sales automation", "Analytics"]
-            }
         ]
     }
-    
     if platform_id not in integrations:
         raise HTTPException(status_code=404, detail="Platform not found")
-    
     return {
         "platform_id": platform_id,
         "integrations": integrations[platform_id],

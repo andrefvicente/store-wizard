@@ -77,14 +77,14 @@ The Store Launch Wizard is an AI-powered tool that guides users through the comp
 **Objective**: Configure e-commerce platform and essential integrations.
 
 **User Inputs**:
-- Preferred e-commerce platform (Shopify, WooCommerce, etc.)
+- Preferred e-commerce plan (Next Basket Self or Pro)
 - Payment gateway preferences
 - Shipping provider selection
 - Marketing tool preferences
 - Required third-party integrations
 
 **AI Assistance**:
-- Platform recommendation based on business needs and technical requirements
+- Plan recommendation based on business needs and technical requirements
 - Integration compatibility analysis
 - Setup priority recommendations
 - Cost optimization suggestions for tools and platforms
@@ -178,10 +178,7 @@ The Store Launch Wizard is an AI-powered tool that guides users through the comp
 ### Integration Management
 
 #### E-commerce Platforms
-- **Shopify**: Theme installation, app configuration, product import
-- **WooCommerce**: Plugin setup, payment gateway configuration
-- **BigCommerce**: API integration, theme customization
-- **Magento**: Extension installation, configuration management
+- **Next Basket**: Self and Pro plan support, all-in-one commerce, AI-powered features
 
 #### Payment Gateways
 - **Setup Automation**: API key configuration, webhook setup

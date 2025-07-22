@@ -3,7 +3,6 @@ import StepIndicator from './StepIndicator'
 import BusinessSetup from './steps/BusinessSetup'
 import ProductConfiguration from './steps/ProductConfiguration'
 import StoreDesign from './steps/StoreDesign'
-import PlatformIntegration from './steps/PlatformIntegration'
 import ContentSEO from './steps/ContentSEO'
 import LaunchReadiness from './steps/LaunchReadiness'
 
@@ -24,9 +23,8 @@ const WizardFlow: React.FC<WizardFlowProps> = ({
         { id: 1, title: 'Business Setup', description: 'Configure your business details' },
         { id: 2, title: 'Products', description: 'Set up your product catalog' },
         { id: 3, title: 'Design', description: 'Choose your store theme' },
-        { id: 4, title: 'Integrations', description: 'Connect payment & shipping' },
-        { id: 5, title: 'Content', description: 'Generate marketing content' },
-        { id: 6, title: 'Launch', description: 'Review & launch your store' }
+        { id: 4, title: 'Content', description: 'Generate marketing content' },
+        { id: 5, title: 'Launch', description: 'Review & launch your store' }
     ]
 
     const handleNext = () => {
@@ -50,10 +48,8 @@ const WizardFlow: React.FC<WizardFlowProps> = ({
             case 3:
                 return <StoreDesign data={wizardData} setData={setWizardData} />
             case 4:
-                return <PlatformIntegration data={wizardData} setData={setWizardData} />
-            case 5:
                 return <ContentSEO data={wizardData} setData={setWizardData} />
-            case 6:
+            case 5:
                 return <LaunchReadiness data={wizardData} setData={setWizardData} />
             default:
                 return <BusinessSetup data={wizardData} setData={setWizardData} />

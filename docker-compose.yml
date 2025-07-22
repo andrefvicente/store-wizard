@@ -17,8 +17,16 @@ services:
       - REDIS_URL=redis://store-wizard-redis:6379
       - JWT_SECRET=${JWT_SECRET:-wizard-dev-secret}
       - STRIPE_API_KEY=${STRIPE_API_KEY}
-      - SHOPIFY_API_KEY=${SHOPIFY_API_KEY}
-      - WOOCOMMERCE_API_KEY=${WOOCOMMERCE_API_KEY}
+      # Remove Shopify and WooCommerce API keys
+      # - SHOPIFY_API_KEY=${SHOPIFY_API_KEY}
+      # - WOOCOMMERCE_API_KEY=${WOOCOMMERCE_API_KEY}
+      # - SHOPIFY_API_URL=https://partners.shopify.com/api
+      # - WOOCOMMERCE_API_URL=${WOOCOMMERCE_API_URL}
+      # Only keep integrations relevant to Next Basket
+      - STRIPE_API_URL=https://api.stripe.com/v1
+      - PAYPAL_API_URL=${PAYPAL_API_URL}
+      - MAILCHIMP_API_URL=${MAILCHIMP_API_URL}
+      - GOOGLE_ANALYTICS_API=${GOOGLE_ANALYTICS_API}
     depends_on:
       - store-wizard-postgres
       - store-wizard-redis
@@ -128,8 +136,7 @@ services:
     ports:
       - "9024:9024"
     environment:
-      - SHOPIFY_API_URL=https://partners.shopify.com/api
-      - WOOCOMMERCE_API_URL=${WOOCOMMERCE_API_URL}
+      # Only keep integrations relevant to Next Basket
       - STRIPE_API_URL=https://api.stripe.com/v1
       - PAYPAL_API_URL=${PAYPAL_API_URL}
       - MAILCHIMP_API_URL=${MAILCHIMP_API_URL}
